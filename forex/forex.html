@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة إدارة رأس المال للفوركس</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader-wrapper">
+        <div id="loader">
+            <img src="assets/img/logo.png" alt="Logo" class="logo" />
+            <div id="loader-text">
+                <span id="loader-percentage">0%</span><br> جاري التحميل
+            </div>
+        </div>
+    </div>
+
+    <!-- زر الإعدادات العائم -->
+    <button id="toggleUserInfo" class="floating-btn" title="معلومات الحساب">
+        <i class="fas fa-user-cog"></i>
+    </button>
+
+    <!-- زر تغيير الوضع الليلي -->
+    <button id="darkModeToggle" class="theme-toggle-btn" title="تبديل الوضع">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container py-4 animate__animated animate__fadeIn">
+        <div class="text-center mb-4 logo_site">
+            <img class="animate__animated animate__fadeIn animate__delay-1s logo_header" src="assets/img/logo.png" alt="Forex Calculator">
+        </div>
+        
+        <div class="card shadow-lg mb-4 card-animate">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="h5 mb-0"><i class="fas fa-calculator me-2"></i>حاسبة إدارة رأس المال</h2>
+            </div>
+            
+            <div class="card-body">
+                <form id="forexCalculator" class="animate__animated animate__fadeIn">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="balance" placeholder="رصيد الحساب" required>
+                                <label for="balance">رصيد الحساب ($)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="risk-percent" placeholder="نسبة المخاطرة" value="2" required>
+                                <label for="risk-percent">نسبة المخاطرة (%)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="stop-loss" placeholder="وقف الخسارة" required>
+                                <label for="stop-loss">نقاط وقف الخسارة (Pips)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="pair">
+                                    <option value="1">أزواج أساسية (XXX/USD, EUR/XXX)</option>
+                                    <option value="0.0001">أزواج الين (XXX/JPY)</option>
+                                    <option value="10">الذهب (XAU/USD)</option>
+                                </select>
+                                <label for="pair">زوج العملات</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success w-100 py-3 pulse">
+                                <i class="fas fa-calculator me-2"></i>حساب
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- نتائج الحساب -->
+        <div class="card shadow-lg mb-4 card-animate" id="resultsCard" style="display: none;">
+            <div class="card-header">
+                <h3 class="h5 mb-0"><i class="fas fa-chart-pie me-2"></i>نتائج الحساب</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-card bg-info-light p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-danger me-3">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">مبلغ المخاطرة</h6>
+                                    <h4 class="mb-0" id="riskAmount">$0.00</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card bg-success-light p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-success me-3">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">حجم المركز</h6>
+                                    <h4 class="mb-0" id="positionSize">0.00 لوت</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card bg-warning-light p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-warning me-3">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">قيمة النقطة</h6>
+                                    <h4 class="mb-0" id="pipValue">$0.00</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card bg-danger-light p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon bg-danger me-3">
+                                    <i class="fas fa-skull"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">الخسارة المحتملة</h6>
+                                    <h4 class="mb-0" id="potentialLoss">$0.00</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+    <script>
+        // دالة حساب إدارة رأس المال
+        function calculateRiskManagement() {
+            const balance = parseFloat($('#balance').val());
+            const riskPercent = parseFloat($('#risk-percent').val());
+            const stopLoss = parseFloat($('#stop-loss').val());
+            const pipValue = parseFloat($('#pair').val());
+            
+            if (isNaN(balance) || isNaN(riskPercent) || isNaN(stopLoss)) {
+                Swal.fire({
+                    title: 'خطأ في المدخلات',
+                    text: 'الرجاء إدخال قيم صحيحة لجميع الحقول',
+                    icon: 'error'
+                });
+                return;
+            }
+            
+            // حساب مبلغ المخاطرة
+            const riskAmount = (balance * riskPercent) / 100;
+            
+            // حساب حجم المركز
+            const positionSize = (riskAmount / (stopLoss * pipValue * 10)).toFixed(2);
+            
+            // حساب قيمة النقطة
+            const calculatedPipValue = (positionSize * pipValue * 10).toFixed(2);
+            
+            // حساب الخسارة المحتملة
+            const potentialLoss = (positionSize * stopLoss * pipValue * 10).toFixed(2);
+            
+            // عرض النتائج
+            $('#riskAmount').text('$' + riskAmount.toFixed(2));
+            $('#positionSize').text(positionSize + ' لوت');
+            $('#pipValue').text('$' + calculatedPipValue);
+            $('#potentialLoss').text('$' + potentialLoss);
+            
+            // إظهار بطاقة النتائج
+            $('#resultsCard').fadeIn();
+        }
+        
+        $(document).ready(function() {
+            // بدء التحميل
+            setTimeout(() => {
+                $('#loader-percentage').text('100%');
+                $('#loader-wrapper').fadeOut();
+            }, 1000);
+            
+            // حساب النتائج عند إرسال النموذج
+            $('#forexCalculator').on('submit', function(e) {
+                e.preventDefault();
+                calculateRiskManagement();
+            });
+            
+            // التحقق من المدخلات
+            $('input').on('input', function() {
+                const value = parseFloat($(this).val());
+                if (value <= 0) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
